@@ -52,10 +52,6 @@ public class MainActivity extends AppCompatActivity {
     Tooltips.make(this,
         new Tooltips.Builder("DSFSDF", findViewById(R.id.b3), Tooltips.Direction.RIGHT).withSquence(1).setTypeface(typeface).build());
 
-
-
-
-
     fab.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)

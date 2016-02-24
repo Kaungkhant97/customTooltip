@@ -144,7 +144,7 @@ public class Tooltips {
 
                   mTempRect.offsetTo(mTempLocation[0], mTempLocation[1]);
                   mViewRect.set(mTempRect);
-                  calculatePositions();
+                  setPosition();
                 }
               }
             }
@@ -178,7 +178,7 @@ public class Tooltips {
 
                 mOldLocation[0] = mTempLocation[0];
                 mOldLocation[1] = mTempLocation[1];
-                calculatePositions();
+                setPosition();
               }
             }
             return true;
@@ -357,26 +357,12 @@ public class Tooltips {
             mViewRect.set(mTempRect);
           }
         }
-        calculatePositions();
+        setPosition();
       }
 
     }
 
-  /*  private void calculatePositions() {
-      calculatePositions(mRestrict);
-    }
-    private void calculatePositions(boolean restrict) {
-      arrowDirections.clear();
-      arrowDirections.addAll(DIRECTION_LIST);
-      arrowDirections.remove(mDirection);
-      arrowDirections.add(0, mDirection);
-      calculatePositions(arrowDirections, restrict);
-
-    }*/
-    private void calculatePositions() {
-
-
-
+    private void setPosition() {
 
        final int screenTop = mScreenRect.top;
 
@@ -386,41 +372,23 @@ public class Tooltips {
 
 
       switch (mDirection){
+        case BOTTOM:setPositionBottom(screenTop, width, height);
+                     break;
+        case TOP:setPositionTop(screenTop, width, height);
+                  break;
+        case LEFT:setPositionLeft(screenTop, width, height);
+                  break;
+        case RIGHT: setPositionRight(screenTop, width, height);
+                    break;
 
       }
-      if (direction == Direction.BOTTOM) {
-        if (calculatePositionBottom(checkEdges, screenTop, width, height)) {
-          calculatePositions(directions, checkEdges);
-          return;
-        }
-      } else if (direction == Direction.TOP) {
-        if (calculatePositionTop(checkEdges, screenTop, width, height)) {
 
-          calculatePositions(directions, checkEdges);
-          return;
-        }
-      } else if (direction == Direction.RIGHT) {
-        if (calculatePositionRight(checkEdges, screenTop, width, height)) {
-          calculatePositions(directions, checkEdges);
-          return;
-        }
-      } else if (direction == Direction.LEFT) {
-        if (calculatePositionLeft(checkEdges, screenTop, width, height)) {
-          calculatePositions(directions, checkEdges);
-          return;
-        }
-      }
-
-      if (direction != mDirection) {
-        mDirection = direction;
-      }
       // translate the text view
 
       mView.setTranslationX(mDrawRect.left);
       mView.setTranslationY(mDrawRect.top);
     }
-    private boolean calculatePositionLeft(final boolean checkEdges,
-        final int screenTop, final int width, final int height) {
+    private void setPositionLeft(final int screenTop, final int width, final int height) {
       mDrawRect.set(mViewRect.left - width, mViewRect.centerY() - height / 2, mViewRect.left,
           mViewRect.centerY() + height / 2);
 
@@ -429,18 +397,14 @@ public class Tooltips {
         } else if (mDrawRect.top < screenTop) {
           mDrawRect.offset(0, screenTop - mDrawRect.top);
         }
-        if (mDrawRect.left < mScreenRect.left) {
-          // this means there's no enough space!
-          return true;
-        } else if (mDrawRect.right > mScreenRect.right) {
+      else if (mDrawRect.right > mScreenRect.right) {
           mDrawRect.offset(mScreenRect.right - mDrawRect.right, 0);
         }
 
-      return false;
+
     }
 
-    private boolean calculatePositionRight(final boolean checkEdges,
-        final int screenTop, final int width, final int height) {
+    private void setPositionRight(final int screenTop, final int width, final int height) {
       mDrawRect.set(mViewRect.right, mViewRect.top, mViewRect.right + width,
           mViewRect.centerY() + height / 2);//left,top,right,bot
 
@@ -449,18 +413,14 @@ public class Tooltips {
         } else if (mDrawRect.top < screenTop) {
           mDrawRect.offset(0, screenTop - mDrawRect.top);
         }
-        if (mDrawRect.right > mScreenRect.right) {
-          // this means there's no enough space!
-          return true;
-        } else if (mDrawRect.left < mScreenRect.left) {
+        else if (mDrawRect.left < mScreenRect.left) {
           mDrawRect.offset(mScreenRect.left - mDrawRect.left, 0);
         }
 
-      return false;
+
     }
 
-    private boolean calculatePositionTop(final boolean checkEdges,
-        final int screenTop, final int width, final int height) {
+    private void setPositionTop(final int screenTop, final int width, final int height) {
       mDrawRect.set(mViewRect.centerX() - width / 2, mViewRect.top - height,
           mViewRect.centerX() + width / 2, mViewRect.top);
 
@@ -470,18 +430,14 @@ public class Tooltips {
         } else if (mDrawRect.left < mScreenRect.left) {
           mDrawRect.offset(-mDrawRect.left, 0);
         }
-        if (mDrawRect.top < screenTop) {
-          // this means there's no enough space!
-          return true;
-        } else if (mDrawRect.bottom > mScreenRect.bottom) {
+         else if (mDrawRect.bottom > mScreenRect.bottom) {
           mDrawRect.offset(0, mScreenRect.bottom - mDrawRect.bottom);
         }
 
-      return false;
+
     }
 
-    private boolean calculatePositionBottom(final boolean checkEdges,
-        final int screenTop, final int width, final int height) {
+    private void setPositionBottom(final int screenTop, final int width, final int height) {
       mDrawRect.set(mViewRect.centerX() - width / 2, mViewRect.bottom,
           mViewRect.centerX() + width / 2, mViewRect.bottom + height);
 
@@ -490,14 +446,10 @@ public class Tooltips {
         } else if (mDrawRect.left < mScreenRect.left) {
           mDrawRect.offset(-mDrawRect.left, 0);
         }
-        if (mDrawRect.bottom > mScreenRect.bottom) {
-          // this means there's no enough space!
-          return true;
-        } else if (mDrawRect.top < screenTop) {
+       else if (mDrawRect.top < screenTop) {
           mDrawRect.offset(0, screenTop - mDrawRect.top);
         }
 
-      return false;
     }
 
 
@@ -528,8 +480,6 @@ public class Tooltips {
 
 
     }
-
-
 
     private void CheckBuilderHaveBuilt() {
       if (completed) {
